@@ -9,6 +9,14 @@
 **Fuente**: [SPEC-LAB-001 v1.3, §3, §4.3 y §13](../../base/SPEC.md).
 **Gobierno**: [Constitución 1.0.0](../../.specify/memory/constitution.md).
 
+## Clarifications
+
+### Session 2026-10-17
+
+- Q: ¿Se rechaza un laberinto cuyo interior es válido pero tiene aperturas exteriores
+  adicionales o la entrada o salida cerradas? → A: Sí; exigir el contorno cerrado salvo
+  entrada izquierda en (0,0) y salida derecha en (14,14).
+
 ## Escenarios de usuario y pruebas
 
 ### Historia 1 — Disponer de tableros confiables (prioridad P1)
@@ -31,6 +39,9 @@ una partida ni abrir una ventana; comparar las entradas aceptadas y rechazadas.
    el proceso ni ofrecer un tablero inválido.
 4. Dada una entrada con forma incorrecta, caracteres ajenos al formato, centros bloqueados,
    casillas desconectadas o ciclos, cuando se valida, entonces se rechaza esa entrada.
+5. Dado un tablero con interior válido y contorno cerrado salvo entrada izquierda en (0,0)
+   y salida derecha en (14,14), cuando se valida, entonces se acepta. Si se cierra cualquiera
+   de esas aperturas o se abre cualquier otro punto del contorno, se rechaza la entrada.
 
 ### Historia 2 — Consultar pasos permitidos (prioridad P1)
 
@@ -81,6 +92,8 @@ admitido o tableros completos con caminos conocidos y comparar las distancias es
 - Una única entrada válida: se conserva; decidir cómo evitar repeticiones pertenece a 002.
 - Coordenadas negativas, 15 o mayores y pares no adyacentes: consulta inválida.
 - Aperturas de entrada y meta: no agregan casillas exteriores ni conexiones internas.
+- Entrada cerrada, salida cerrada o cualquier apertura adicional en el contorno, incluidas
+  las esquinas: entrada rechazada aunque conserve conectividad y 224 conexiones internas.
 - Tablero cuyo camino abarca las 225 casillas: las distancias siguen siendo completas.
 
 ## Requisitos
@@ -94,7 +107,9 @@ admitido o tableros completos con caminos conocidos y comparar las distancias es
   sin reescribir el archivo de origen.
 - **RF-03**: El sistema DEBE aceptar únicamente tableros con 31 filas de 31 caracteres,
   usando solo `#` para pared y espacio para camino, con los 225 centros transitables,
-  todas las casillas conectadas y exactamente 224 conexiones internas abiertas.
+  todas las casillas conectadas y exactamente 224 conexiones internas abiertas. El contorno
+  DEBE ser pared salvo dos espacios obligatorios: entrada izquierda de (0,0) y salida derecha
+  de (14,14); cualquier apertura adicional o cierre de una de estas dos invalida la entrada.
 - **RF-04**: El sistema DEBE evaluar las entradas por separado e ignorar las inválidas sin
   descartar las válidas por la presencia de otras inválidas.
 - **RF-05**: El sistema DEBE informar al consumidor que el catálogo no es utilizable si
@@ -129,7 +144,9 @@ admitido o tableros completos con caminos conocidos y comparar las distancias es
   y conserva todos sus datos descriptivos (CA-01; historia 1; RF-01 y RF-02).
 - **CE-02**: Todos los casos de entrada inválida de historia 1 y casos límite son rechazados;
   cada entrada válida de un catálogo mixto se conserva y ninguno de los errores de lectura
-  enumerados cierra el proceso (RF-03 a RF-05).
+  enumerados cierra el proceso (RF-03 a RF-05). La validación del contorno acepta únicamente
+  las dos aperturas obligatorias; se comprueba el rechazo al cerrar cada una o abrir
+  individualmente cualquier otro punto del contorno de un tablero con interior válido.
 - **CE-03**: Para las 225 casillas de cada uno de los cinco tableros de referencia, el
   conjunto de vecinos coincide con las conexiones abiertas, sin diagonales ni salidas del
   dominio; cada conexión es simétrica (CA-02; historia 2; RF-06 y RF-07).
@@ -156,7 +173,9 @@ admitido o tableros completos con caminos conocidos y comparar las distancias es
   de cinco registros con campos `id`, `tipo`, `descripcion`, `entrada`, `salida` y `grid`.
   El formato de datos de §4.3 se conserva; seleccionar APIs y algoritmos corresponde al plan.
 - Los centros de casilla y paredes se interpretan conforme a §4.3 del documento fuente.
-  Las aperturas del contorno no forman parte de las 224 conexiones internas.
+  Las aperturas del contorno no forman parte de las 224 conexiones internas. En el formato
+  de 31×31, las únicas posiciones abiertas del contorno son `grid[1][0]` y `grid[29][30]`;
+  todas las demás posiciones del contorno, incluidas sus cuatro esquinas, contienen `#`.
 - Se considera inválida la estructura superior que no sea una lista. Los registros sin
   tablero se rechazan individualmente. El detalle del mecanismo para informar errores se
   define en el plan, manteniendo los resultados observables de esta especificación.
