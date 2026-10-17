@@ -1,94 +1,172 @@
 # Especificación: Consultar y validar laberintos
 
 **Identificador**: 001-modelo-laberintos
+**Rama de trabajo**: `work`; publicación de esta fase en `main`.
 **Creada**: 2026-10-17
-**Estado**: Descompuesta para revisión; no implementada.
-**Fuente**: [SPEC-LAB-001 v1.3](../../base/SPEC.md), idéntica al adjunto analizado.
+**Revisada**: 2026-10-17
+**Estado**: Lista para planificación; funcionalidad no implementada.
+**Entrada**: `$speckit.specify 001`, sobre la descomposición existente.
+**Fuente**: [SPEC-LAB-001 v1.3, §3, §4.3 y §13](../../base/SPEC.md).
 **Gobierno**: [Constitución 1.0.0](../../.specify/memory/constitution.md).
 
 ## Escenarios de usuario y pruebas
 
-### Historia 1 — Consultar y validar laberintos (prioridad P1)
+### Historia 1 — Disponer de tableros confiables (prioridad P1)
 
-Como responsable del juego quiero cargar y consultar los laberintos para que todo movimiento respete sus paredes.
+Como responsable del juego quiero cargar los laberintos válidos del catálogo para ofrecer
+partidas donde todas las casillas se puedan alcanzar y exista un único camino entre ellas.
 
-**Valor**: entregar esta capacidad sin asumir que la interfaz y el juego completos ya existen.
-**Prueba independiente**: ejecutar los escenarios siguientes con entradas controladas y dobles de
-las dependencias; para la vista, una demostración visual aislada. Las pruebas integradas se
-realizan cuando estén disponibles los consumidores correspondientes.
+**Por qué esta prioridad**: los movimientos y la persecución necesitan un tablero válido.
+**Prueba independiente**: cargar el catálogo de referencia y variantes controladas sin iniciar
+una partida ni abrir una ventana; comparar las entradas aceptadas y rechazadas.
 
-1. Dado el catálogo válido, cuando se carga, entonces se obtienen los cinco tableros de 15×15 y sus vecinos coinciden con el grid.
-2. Dada cualquier casilla, cuando se consultan sus distancias, entonces su distancia es cero y las demás coinciden con el número de pasos de su camino.
+**Escenarios de aceptación**:
+
+1. Dado el catálogo de referencia con cinco entradas válidas, cuando se carga, entonces se
+   obtienen cinco tableros de 15×15, conservando su identificador, tipo y descripción.
+2. Dado un catálogo con una entrada válida y otra inválida, cuando se carga, entonces se
+   conserva la válida sin alterarla y se ignora la inválida.
+3. Dado un archivo inexistente, ilegible, con contenido no interpretable o sin entradas
+   válidas, cuando se carga, entonces se informa que no hay catálogo utilizable sin cerrar
+   el proceso ni ofrecer un tablero inválido.
+4. Dada una entrada con forma incorrecta, caracteres ajenos al formato, centros bloqueados,
+   casillas desconectadas o ciclos, cuando se valida, entonces se rechaza esa entrada.
+
+### Historia 2 — Consultar pasos permitidos (prioridad P1)
+
+Como responsable de las reglas quiero conocer las casillas vecinas accesibles para impedir
+que los actores crucen paredes o abandonen el tablero.
+
+**Por qué esta prioridad**: hace comprobables los movimientos sin desarrollar la interfaz.
+**Prueba independiente**: comparar consultas en tableros de paredes conocidas con sus
+conexiones esperadas, sin dados ni actores.
+
+**Escenarios de aceptación**:
+
+1. Dada la casilla (0,0) del laberinto 1, cuando se consultan sus vecinos accesibles,
+   entonces coinciden exactamente con las conexiones abiertas de la fuente (CA-02).
+2. Dadas dos casillas vecinas, cuando se consulta su conexión en ambos sentidos,
+   entonces se obtiene el mismo resultado; una pared impide el paso en ambos sentidos.
+3. Dada una casilla de borde, cuando se consultan vecinos, entonces no se devuelven
+   diagonales ni coordenadas exteriores, incluso junto a las aperturas de entrada o meta.
+4. Dada una coordenada fuera del dominio o una consulta de pared entre casillas no
+   adyacentes, cuando se consulta, entonces se informa que la consulta no es válida,
+   sin devolver una conexión ficticia ni modificar el tablero.
+
+### Historia 3 — Conocer distancias por el laberinto (prioridad P2)
+
+Como responsable de la aparición del fantasma quiero conocer la distancia real desde una
+casilla hasta todas las demás para poder aplicar después la separación mínima de aparición.
+
+**Por qué esta prioridad**: habilita decisiones de juego sin incluirlas en este alcance.
+**Prueba independiente**: usar tableros pequeños de referencia conceptual ampliados al formato
+admitido o tableros completos con caminos conocidos y comparar las distancias esperadas.
+
+**Escenarios de aceptación**:
+
+1. Dado cualquier origen válido, cuando se consultan distancias, entonces se incluyen las
+   225 casillas, el origen tiene distancia cero y cada otra casilla tiene el número de pasos
+   de su único camino desde el origen.
+2. Dado un recorrido con rodeos impuestos por paredes, cuando se consulta su distancia,
+   entonces se cuentan los pasos transitables y no la separación en línea recta.
+3. Dada la misma consulta repetida, cuando se ejecuta, entonces devuelve las mismas
+   distancias y no cambia el laberinto ni los resultados de consultas anteriores.
 
 ### Casos límite
 
-- Archivo inexistente, JSON mal formado, catálogo vacío o mezcla de entradas válidas e inválidas.
-- Tableros desconectados, con ciclos, centros bloqueados y coordenadas fuera del dominio.
+- Catálogo vacío, estructura superior distinta de una lista, entrada que no es un registro
+  o campo de tablero ausente: no se debe propagar un fallo de lectura sin controlar.
+- Cantidad de filas o columnas distinta de 31, caracteres distintos de pared y espacio,
+  un centro bloqueado, un ciclo o una región inaccesible: entrada rechazada.
+- Una única entrada válida: se conserva; decidir cómo evitar repeticiones pertenece a 002.
+- Coordenadas negativas, 15 o mayores y pares no adyacentes: consulta inválida.
+- Aperturas de entrada y meta: no agregan casillas exteriores ni conexiones internas.
+- Tablero cuyo camino abarca las 225 casillas: las distancias siguen siendo completas.
 
 ## Requisitos
 
 ### Requisitos funcionales
 
-- **RF-01**: Se DEBE representar coordenadas (columna, fila) en 0..14 y mapearlas a grid[2*fila+1][2*columna+1].
-- **RF-02**: Se DEBE consultar paredes y vecinos ortogonales sin permitir posiciones fuera del tablero; las aperturas exteriores no crean casillas jugables.
-- **RF-03**: Se DEBE cargar las cinco entradas de base/laberintos.json y conservar identidad, nombre y grid.
-- **RF-04**: Se DEBE validar 31 filas de 31 caracteres, solo # y espacio, 225 centros transitables, conectividad y exactamente 224 conexiones entre casillas; ignorar entradas inválidas.
-- **RF-05**: Se DEBE calcular distancias por caminos accesibles desde cualquier casilla; no usar distancia en línea recta.
-- **RF-06**: Se DEBE informar al consumidor si el catálogo falta, es ilegible, contiene JSON inválido o no tiene entradas válidas; no cerrar el proceso.
+- **RF-01**: El sistema DEBE representar 225 casillas en un tablero de 15×15, con coordenadas
+  (columna, fila) entre 0 y 14, entrada en (0,0) y meta en (14,14).
+- **RF-02**: El sistema DEBE leer el catálogo existente y conservar, para cada entrada
+  aceptada, su identidad, tipo, descripción, entrada, salida y distribución de paredes,
+  sin reescribir el archivo de origen.
+- **RF-03**: El sistema DEBE aceptar únicamente tableros con 31 filas de 31 caracteres,
+  usando solo `#` para pared y espacio para camino, con los 225 centros transitables,
+  todas las casillas conectadas y exactamente 224 conexiones internas abiertas.
+- **RF-04**: El sistema DEBE evaluar las entradas por separado e ignorar las inválidas sin
+  descartar las válidas por la presencia de otras inválidas.
+- **RF-05**: El sistema DEBE informar al consumidor que el catálogo no es utilizable si
+  falta, no se puede leer, no tiene una estructura interpretable o no conserva entradas
+  válidas. NO DEBE cerrar el proceso como consecuencia de estos casos.
+- **RF-06**: El sistema DEBE devolver exclusivamente vecinos ortogonales dentro del tablero
+  conectados sin pared y permitir consultar las paredes entre casillas adyacentes.
+- **RF-07**: Las consultas de conexión DEBEN ser simétricas. Las aperturas exteriores NO
+  DEBEN permitir consultar o devolver una casilla fuera del tablero.
+- **RF-08**: El sistema DEBE informar de las consultas inválidas sobre coordenadas fuera
+  del dominio o paredes entre casillas no adyacentes, sin inventar resultados transitables.
+- **RF-09**: El sistema DEBE proporcionar distancias desde cualquier casilla válida hasta
+  las 225 casillas contando únicamente pasos permitidos; el origen DEBE tener distancia cero.
+- **RF-10**: Las consultas de vecinos, paredes y distancias NO DEBEN modificar el tablero,
+  su identidad ni resultados entregados previamente.
 
-### Entidades
+### Entidades principales
 
-Laberinto, casilla, conexión y catálogo validado.
-
-### Fuera de alcance
-
-No genera tableros ni decide modos, turnos, aparición o presentación de errores.
+- **Casilla**: posición identificada por columna y fila.
+- **Laberinto**: conjunto de 225 casillas y sus paredes, con entrada y meta.
+- **Conexión**: paso abierto entre dos casillas ortogonales contiguas; se cuenta una vez.
+- **Entrada del catálogo**: identidad, tipo, descripción y representación de un laberinto.
+- **Catálogo utilizable**: colección de entradas válidas; puede contener menos de cinco si
+  la fuente contiene entradas rechazadas.
+- **Distancias**: correspondencia entre cada casilla y el número de pasos desde un origen.
 
 ## Criterios de éxito
 
-- Todos los escenarios y requisitos anteriores tienen una comprobación que pasa antes de
-  declarar implementada esta funcionalidad; esta descomposición no afirma que ya pasen.
-- Se conservan los siguientes criterios originales, sin renumerarlos:
+### Resultados medibles
 
-| ID | Criterio original |
-|---|---|
-| CA-01 | `Laberinto` carga los 5 laberintos del JSON; cada uno tiene 15×15 casillas. |
-| CA-02 | `vecinos_accesibles((0,0))` del laberinto 1 coincide con las paredes del `grid`. |
-| CA-27 | `distancias_desde(c)` da 0 en `c` y, para cada casilla, el mismo valor que `len(buscar_camino(c, casilla))`. |
+- **CE-01**: El catálogo de referencia entrega exactamente cinco laberintos de 225 casillas
+  y conserva todos sus datos descriptivos (CA-01; historia 1; RF-01 y RF-02).
+- **CE-02**: Todos los casos de entrada inválida de historia 1 y casos límite son rechazados;
+  cada entrada válida de un catálogo mixto se conserva y ninguno de los errores de lectura
+  enumerados cierra el proceso (RF-03 a RF-05).
+- **CE-03**: Para las 225 casillas de cada uno de los cinco tableros de referencia, el
+  conjunto de vecinos coincide con las conexiones abiertas, sin diagonales ni salidas del
+  dominio; cada conexión es simétrica (CA-02; historia 2; RF-06 y RF-07).
+- **CE-04**: Todas las consultas inválidas enumeradas se notifican sin alterar el tablero
+  ni declarar un paso inexistente (historia 2; RF-08).
+- **CE-05**: Para cada origen de cada tablero de referencia, las distancias cubren las
+  225 casillas y coinciden con longitudes de caminos de referencia; origen cero en todos
+  los casos. Cuando 004 esté disponible, se verifica también CA-27 por integración
+  (historia 3; RF-09).
+- **CE-06**: Repetir las consultas de las historias 2 y 3 conserva el contenido original del
+  tablero y de los resultados anteriores (RF-10).
 
-- Cada requisito funcional adicional a los CA originales se verifica con prueba automatizada
-  si es lógica, o revisión visual/funcional documentada si es presentación.
-- La implementación cumple pruebas primero, lógica sin pygame y al menos 80 % de cobertura
-  por cada módulo de lógica, incluso cuando el comando original solo comprueba el total.
+### Trazabilidad de los criterios originales
 
-## Dependencias y supuestos
+| ID | Criterio original | Comprobación en esta funcionalidad |
+|---|---|---|
+| CA-01 | `Laberinto` carga los 5 laberintos del JSON; cada uno tiene 15×15 casillas. | CE-01 |
+| CA-02 | `vecinos_accesibles((0,0))` del laberinto 1 coincide con las paredes del `grid`. | CE-03 |
+| CA-27 | `distancias_desde(c)` da 0 en `c` y, para cada casilla, el mismo valor que `len(buscar_camino(c, casilla))`. | CE-05; comparación literal con 004 al integrarla |
 
-- No requiere implementar otras especificaciones para validar su contrato.
+## Supuestos
 
-Las reglas de formato de §4.3 se aplican a la validación. El consumidor decide el respaldo. CA-27 usa caminos conocidos como referencia y se integra también con 004.
-
-## Referencia y límites de esta división
-
-Los contratos y valores numéricos originales de las secciones referenciadas se mantienen.
-La arquitectura de §12 es orientación para la planificación, no nuevas funciones del producto.
-Los archivos de base son material de referencia y no se modifican en esta fase.
-Las contradicciones señaladas requieren decisión antes de planificar el aspecto afectado.
-Las mejoras futuras de §15 y alternativas descartadas de §8.6 permanecen fuera de alcance.
-
-### Extractos originales de referencia
-
-
-> ## 3. Glosario
->
-> | Término | Definición |
-> |---|---|
-> | Casilla (celda) | Unidad del tablero. Coordenada `(col, fila)`, ambas en `0..14`. `(0,0)` es arriba-izquierda. |
-> | Paso | Movimiento de una casilla a una casilla vecina (arriba, abajo, izquierda, derecha) sin cruzar pared. No hay movimiento en diagonal. |
-> | Entrada | Casilla `(0,0)`. Su pared izquierda está abierta. |
-> | Meta | Casilla `(14,14)`. Su pared derecha está abierta. |
-> | Turno | Tirada del dado + movimiento de un actor (jugador o fantasma). |
-> | Ronda | Turno del jugador seguido del turno del fantasma. |
-> | Captura | El actor que se mueve entra a la casilla donde está el otro actor (ver 6.4). |
-> | Pila | Estructura LIFO donde el backtracking guarda el camino que está explorando. Se dibuja como un tarro. |
-> | Apilar / Desapilar | Meter una casilla en la cima de la pila / sacar la casilla de la cima (retroceso). |
-> | Traza | Lista ordenada de eventos (apilar, desapilar, encontrado) que produce la búsqueda. Se usa para animar el visualizador. |
+- La fuente del catálogo es [base/laberintos.json](../../base/laberintos.json), una lista
+  de cinco registros con campos `id`, `tipo`, `descripcion`, `entrada`, `salida` y `grid`.
+  El formato de datos de §4.3 se conserva; seleccionar APIs y algoritmos corresponde al plan.
+- Los centros de casilla y paredes se interpretan conforme a §4.3 del documento fuente.
+  Las aperturas del contorno no forman parte de las 224 conexiones internas.
+- Se considera inválida la estructura superior que no sea una lista. Los registros sin
+  tablero se rechazan individualmente. El detalle del mecanismo para informar errores se
+  define en el plan, manteniendo los resultados observables de esta especificación.
+- No se añaden obligaciones sobre datos decorativos o metadatos ajenas a la fuente.
+- No se requiere implementar otras funcionalidades para probar este contrato. Para CA-27
+  se usan caminos conocidos o una referencia independiente durante esta fase; no se inicia
+  la implementación de la búsqueda 004 para cerrar esta especificación.
+- No se incluyen generación, selección aleatoria, modos, respaldo mediante generación,
+  dados, actores, turnos, interfaz, textos de error en pantalla ni exportación de imágenes.
+  El consumidor aplica el respaldo y sus mensajes según 002 y 008.
+- La implementación posterior DEBE cumplir la constitución: pruebas antes del código,
+  lógica sin dependencias gráficas, cobertura mínima del 80 % por módulo y español.
+  Esta fase valida el documento; no acredita ejecución ni cobertura del producto.
