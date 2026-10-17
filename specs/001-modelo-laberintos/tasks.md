@@ -71,9 +71,9 @@ construcción de tableros y copias de metadatos; sin partida ni pantalla.
 contra el grid, sin depender del cargador, los dados o actores. La ejecución sigue a US1
 porque comparte el mismo archivo y la construcción ya validada.
 
-- [ ] T016 [US2] Añadir en tests/test_laberinto.py pruebas de coordenadas y pares inválidos: «Tupla (columna, fila) de dos enteros, excluyendo booleanos, cada uno entre 0 y 14», tipo/forma incorrectos, negativos, 15 o más, igualdad, diagonal y separación mayor que uno para hay_pared; observar fallos antes de T017 (RF-08, CE-04).
-- [ ] T017 [US2] Añadir en laberinto.py validación de argumentos y la interfaz hay_pared, interpretando el separador grid[fA+fB+1][cA+cB+1]; rechazar coordenadas y pares inválidos con ValueError español antes de indexar; cubrir consultas válidas básicas sin añadir vecinos ni distancias.
-- [ ] T018 [US2] Añadir en tests/test_laberinto.py pruebas de vecinos_accesibles, orden arriba/derecha/abajo/izquierda, simetría de paredes, aperturas que no crean vecinos exteriores y comparación directa con el grid de las 1 125 casillas; incluir expectativa explícita de vecinos de (0,0) del laberinto 1. Observar fallos antes de T019 (RF-06, RF-07, CE-03, CA-02).
+- [ ] T016 [US2] Añadir en tests/test_laberinto.py pruebas de coordenadas y pares inválidos: «Tupla (columna, fila) de dos enteros, excluyendo booleanos, cada uno entre 0 y 14», tipo/forma incorrectos, negativos, 15 o más, igualdad, diagonal y separación mayor que uno para hay_pared; incluir pruebas de pares adyacentes válidos con pared (True) y paso abierto (False), contrastados directamente con el grid. Para cada consulta inválida, comparar antes y después el grid, metadatos y resultados anteriores y exigir que permanezcan iguales. Observar y registrar los fallos de argumentos inválidos y paredes válidas antes de T017 (RF-06, RF-08, RF-10, CE-03, CE-04).
+- [ ] T017 [US2] Añadir en laberinto.py validación de argumentos y la interfaz hay_pared, interpretando el separador grid[fA+fB+1][cA+cB+1]; rechazar coordenadas y pares inválidos con ValueError español antes de indexar; implementar únicamente las consultas válidas e inválidas de paredes probadas primero en T016, sin añadir vecinos ni distancias.
+- [ ] T018 [US2] Añadir en tests/test_laberinto.py pruebas de vecinos_accesibles, orden arriba/derecha/abajo/izquierda, simetría de paredes, aperturas que no crean vecinos exteriores y comparación directa con el grid de las 1 125 casillas; incluir expectativa explícita de vecinos de (0,0) del laberinto 1 y rechazo de coordenadas inválidas por vecinos_accesibles, comprobando que el grid, metadatos y resultados anteriores no cambian tras cada rechazo. Observar fallos antes de T019 (RF-06, RF-07, CE-03, CA-02).
 - [ ] T019 [US2] Implementar vecinos_accesibles y completar hay_pared en laberinto.py para pasar T018: «lista nueva de Casilla, en orden arriba/derecha/abajo/izquierda», «booleano para un par adyacente válido; simétrico», sin vecinos diagonales ni fuera de 0..14.
 - [ ] T020 [US2] Añadir en tests/test_laberinto.py pruebas de repetición de vecinos, modificación de listas devueltas y comprobación de que ni el grid, metadatos ni resultados anteriores cambian (RF-10, CE-06); ejecutarlas antes de cualquier corrección de T021.
 - [ ] T021 [US2] Ajustar laberinto.py solo si T020 descubre referencias mutables compartidas, observando primero ese fallo; si el diseño ya pasa, registrar esa evidencia y refactorizar únicamente si aporta claridad, sin introducir código innecesario.
@@ -86,7 +86,7 @@ porque comparte el mismo archivo y la construcción ya validada.
 solo desde el grid, usando un recorrido con pila en las pruebas, distinto del recorrido en
 anchura de producción. No importar fantasma_ia ni llamar a funciones futuras de 004.
 
-- [ ] T023 [US3] Añadir en tests/conftest.py el tablero serpenteante de 225 casillas con ruta de 224 pasos y el oráculo de caminos independiente; añadir en tests/test_laberinto.py comparación de las 225 distancias para cada origen de cada uno de los cinco tableros, rodeos, origen cero, repetibilidad y origen inválido; observar fallos antes de T024 (RF-09, CE-05, validación independiente de CA-27).
+- [ ] T023 [US3] Añadir en tests/conftest.py el tablero serpenteante de 225 casillas con ruta de 224 pasos y el oráculo de caminos independiente; añadir en tests/test_laberinto.py comparación de las 225 distancias para cada origen de cada uno de los cinco tableros, rodeos, origen cero, repetibilidad y origen inválido; para cada origen inválido comprobar que grid, metadatos y resultados anteriores permanecen iguales tras el rechazo. Observar fallos antes de T024 (RF-09, CE-05, validación independiente de CA-27).
 - [ ] T024 [US3] Implementar distancias_desde en laberinto.py mediante recorrido en anchura con collections.deque, validación inicial del origen y resultados «diccionario nuevo Casilla → entero no negativo, de 225 entradas; origen cero», sin consumo de azar, pygame ni cachés mutables.
 - [ ] T025 [US3] Añadir en tests/test_laberinto.py pruebas que alteren diccionarios de distancias devueltos, repitan consultas desde orígenes distintos y comparen grid y resultados anteriores para completar RF-10/CE-06; ejecutarlas antes de T026.
 - [ ] T026 [US3] Ajustar laberinto.py solo ante fallos observados en T025, para mantener resultados independientes; si las garantías existentes bastan, registrar que las nuevas pruebas ya pasan y no añadir una capa de código para reproducir lo que ya cumple.
@@ -138,10 +138,10 @@ No se dividen archivos ni se añade infraestructura solo para fabricar paralelis
 | RF-02 | T011–T015 |
 | RF-03 / CE-02 | T005–T010, T013–T015 |
 | RF-04 y RF-05 | T013–T015 |
-| RF-06 y RF-07 / CE-03 / CA-02 | T018–T019, T022 |
-| RF-08 / CE-04 | T016–T017, T023–T024 |
+| RF-06 y RF-07 / CE-03 / CA-02 | T016–T019, T022 |
+| RF-08 / CE-04 | T016–T019, T023–T024 |
 | RF-09 / CE-05 | T023–T024, T027 |
-| RF-10 / CE-06 | T011–T012, T020–T021, T025–T027 |
+| RF-10 / CE-06 | T011–T012, T016–T019, T020–T021, T023–T027 |
 | CA-27 independiente / integración literal | T023–T027 / pendiente explícito en T031 |
 | Constitución: independencia, pruebas primero, cobertura y cierre | T005, cada pareja TDD, T028–T032 |
 
