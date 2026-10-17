@@ -64,6 +64,19 @@ longitudes conocidas. No importar funciones internas de producción para generar
 **Alternativas**: usar la misma función BFS en prueba y producción (puede replicar defectos),
 traer pygame para pruebas (viola independencia), lanzar 004 antes de tiempo (fuera de alcance).
 
+## 7. Confirmación del entorno técnico y límites de integración
+
+**Decisión**: adoptar la instrucción explícita del usuario: Python 3.10+, pygame 2.x como
+única dependencia del juego, pytest/pytest-cov para desarrollo, ventana 920×740, predefinidos
+en laberintos.json, generación mediante backtracking de pila explícita y ejecución con
+python main.py sin empaquetado.
+**Motivo**: coincide con la fuente y la constitución; completa las condiciones del producto
+sin mezclar el modelo de datos con el código gráfico o el generador de 002.
+**Alternativas descartadas**: generación por recursión de llamadas, dependencias gráficas
+en lógica, ejecutable empaquetado y traslado del catálogo durante una fase documental.
+**Ruta de datos**: cargar_catalogo recibe una ruta; base/laberintos.json es la referencia
+actual. El punto de entrada de 008 resolverá el archivo relativo a su propia ubicación.
+
 ## Resultado
 
 No quedan decisiones técnicas sin resolver para 001. Las decisiones pendientes de 002, 006

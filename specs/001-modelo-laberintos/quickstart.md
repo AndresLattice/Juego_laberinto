@@ -53,6 +53,26 @@ cero pruebas. Al existir otros módulos lógicos se medirá el mínimo por cada 
 8. Ejecutar las pruebas de lógica en un proceso sin pygame instalado y sin inicializar pantalla.
    Revisar imports para evitar dependencias gráficas indirectas.
 
+## Ejecución del juego completo cuando 008 esté implementada
+
+Las condiciones confirmadas son Python 3.10+, pygame 2.x y ventana 920×740.
+Los comandos previstos desde la carpeta de main.py son:
+
+```bash
+python -m pip install -r requirements.txt
+python main.py
+```
+
+requirements.txt solo requiere pygame>=2,<3 como dependencia externa del juego.
+pytest y pytest-cov pertenecen a requirements-dev.txt y no son necesarios para jugar.
+No se construye un ejecutable ni un paquete de distribución. El cargador recibe la ruta
+resuelta de laberintos.json; el catálogo actual de pruebas sigue en base/laberintos.json.
+El modo generado usará backtracking con pila explícita de 002. La vista 007 y la integración
+008 comprobarán la ventana de 920×740; esas capacidades no se acreditan con pruebas de 001.
+
+Estos comandos no son ejecutables todavía: no existen main.py ni la interfaz del juego.
+La validación presente del plan es documental.
+
 ## Cierre
 
 Usar la matriz de [plan.md](plan.md) para acreditar CE-01 a CE-06. Adjuntar resultados reales

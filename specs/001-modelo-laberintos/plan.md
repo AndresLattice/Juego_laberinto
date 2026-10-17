@@ -23,7 +23,7 @@ y la validación futura en [quickstart.md](quickstart.md).
   pathlib, collections.deque, dataclasses y copy. No importar pygame directa ni indirectamente.
 - **Herramientas de desarrollo**: pytest y pytest-cov en requirements-dev.txt. La versión
   compatible se selecciona y registra al implementar; no instalar herramientas para redactar.
-- **Producto futuro**: pygame será su única dependencia externa de ejecución; no hace falta
+- **Producto futuro**: pygame 2.x será su única dependencia externa de ejecución; no hace falta
   instalarlo para ejecutar las pruebas de 001.
 - **Almacenamiento**: base/laberintos.json, únicamente lectura; no base de datos ni servicios.
 - **Plataformas**: macOS, Windows y Linux; pruebas sin pantalla y rutas con pathlib.
@@ -34,6 +34,32 @@ y la validación futura en [quickstart.md](quickstart.md).
   No inventar límites temporales: los 50 ms de generación y 10 ms de búsqueda son de 002 y 004.
 - **Restricciones**: contorno cerrado salvo grid[1][0] y grid[29][30], resultados independientes,
   sin alterar base/, sin aleatoriedad y sin ampliar las reglas de metadatos de la fuente.
+
+## Decisiones técnicas confirmadas por el usuario
+
+Estas condiciones rigen la integración del juego completo y se conservan al planificar
+las demás funcionalidades. La funcionalidad activa sigue siendo 001.
+
+| Decisión | Aplicación en 001 | Integración posterior |
+|---|---|---|
+| Python 3.10+ | Sintaxis y biblioteca estándar compatibles | Todos los módulos |
+| pygame 2.x, única dependencia externa del juego | Sin importaciones de pygame | Representación y bucle en 007/008 |
+| pytest y pytest-cov | Pruebas primero y cobertura ≥80 % por módulo | Herramientas solo de desarrollo |
+| Ventana 920×740 | Sin ventana en lógica o pruebas | Configuración y representación en 007/008 |
+| Predefinidos en laberintos.json | Cargador recibe la ruta explícitamente | El punto de entrada determina la ruta del archivo |
+| Backtracking con pila explícita para generación | Tableros admitidos por el mismo contrato | generar_backtracking en 002; sin recursión de llamadas |
+| Módulos de lógica sin pygame | laberinto.py usa solo biblioteca estándar | También IA, dado, visualizador y juego |
+| python main.py, sin empaquetar | No crear ejecutable ni paquete instalable | Bucle de juego en 008 |
+
+El catálogo actual está en base/laberintos.json y permanece como referencia intacta. La
+instrucción sobre laberintos.json fija el archivo y su formato, sin requerir moverlo en esta
+fase. cargar_catalogo(ruta) admite tanto esa ruta como laberintos.json junto a main.py.
+Al integrar 008 se fijará la ruta relativa a main.py, independiente del directorio desde el
+que se invoque; no se buscarán archivos en ubicaciones ambiguas ni se duplicarán datos ahora.
+
+Las dependencias del juego se declararán en requirements.txt con pygame>=2,<3; pytest y
+pytest-cov se declararán en requirements-dev.txt. Estos archivos se crearán en la fase de
+implementación que los necesite. No se añade generación ni interfaz al alcance de 001.
 
 ## Comprobación de la constitución
 
