@@ -4,7 +4,7 @@
 **Rama de trabajo**: `work`; publicación de esta fase en `main`.
 **Creada**: 2026-10-17
 **Revisada**: 2026-10-17
-**Estado**: Lista para planificación; funcionalidad no implementada.
+**Estado**: Implementación aislada verificada; CA-27 literal pendiente de integración con 004.
 **Entrada**: `$speckit.specify 001`, sobre la descomposición existente.
 **Fuente**: [SPEC-LAB-001 v1.3, §3, §4.3 y §13](../../base/SPEC.md).
 **Gobierno**: [Constitución 1.0.0](../../.specify/memory/constitution.md).

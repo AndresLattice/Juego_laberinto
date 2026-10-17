@@ -1,7 +1,8 @@
 # Guía de validación futura: 001
 
-Esta guía se ejecutará después de implementar; laberinto.py y las pruebas todavía no existen.
-No describe comandos ya ejecutados ni resultados del producto acreditados en esta fase.
+El módulo laberinto.py y las pruebas de esta funcionalidad están implementados.
+Esta guía permite repetir su validación sin interfaz gráfica. La evidencia de la ejecución
+real está en [validacion.md](validacion.md); el juego completo todavía no está implementado.
 
 ## Preparación
 
@@ -14,7 +15,7 @@ python -m pip install -r requirements-dev.txt
 ```
 
 En Windows activar con `.venv\Scripts\Activate.ps1`. Requisitos: Python 3.10+ y las
-herramientas de desarrollo declaradas al implementar. No hace falta instalar pygame ni abrir
+herramientas de desarrollo declaradas en requirements-dev.txt (pytest 8.4.2 y pytest-cov 7.0.0). No hace falta instalar pygame ni abrir
 una ventana para esta funcionalidad. Usar el checkout existente; no crear un worktree.
 
 ## Ciclo de pruebas primero
@@ -71,7 +72,7 @@ El modo generado usará backtracking con pila explícita de 002. La vista 007 y 
 008 comprobarán la ventana de 920×740; esas capacidades no se acreditan con pruebas de 001.
 
 Estos comandos no son ejecutables todavía: no existen main.py ni la interfaz del juego.
-La validación presente del plan es documental.
+La validación de 001 es de lógica sin ventana; no acredita estos comandos del juego completo.
 
 ## Cierre
 
