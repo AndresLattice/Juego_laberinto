@@ -2,7 +2,7 @@
 
 **Identificador**: 004-busqueda-con-traza
 **Creada**: 2026-10-17
-**Estado**: Descompuesta para revisión; no implementada.
+**Estado**: Implementada y verificada; ver [validacion.md](validacion.md).
 **Fuente**: [SPEC-LAB-001 v1.3](../../base/SPEC.md), idéntica al adjunto analizado.
 **Gobierno**: [Constitución 1.0.0](../../.specify/memory/constitution.md).
 

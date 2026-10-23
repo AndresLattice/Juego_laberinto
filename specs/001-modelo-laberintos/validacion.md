@@ -5,7 +5,7 @@
 
 El usuario autorizó continuar con el checklist personalizado pendiente (28 elementos).
 Se mantienen sus marcas originales y las del checklist básico (16 aprobadas).
-No se declara terminado el juego ni aprobado CA-27 literal: requiere integrar 004.
+No se declara terminado el juego. CA-27 literal se aprobó al integrar 004.
 
 ## Integridad de datos y alcance
 
@@ -79,7 +79,7 @@ también con python -S (biblioteca estándar sin paquetes del entorno).
 | RF-09 / CE-05 | 225 destinos para 225 orígenes de cada uno de los cinco tableros; referencia independiente con pila | Aprobado |
 | RF-10 / CE-06 | Mutación de copias no cambia fuente, modelo, metadatos ni resultados previos | Aprobado |
 | CA-27: distancias independientes | Comparación con oráculo y serpiente de 224 pasos; total de 253 125 pares de referencia | Aprobado en aislamiento |
-| CA-27 literal con buscar_camino | No existe aún fantasma_ia de 004; no se implementó fuera de alcance | Pendiente de integración |
+| CA-27 literal con buscar_camino | `test_distancias_coinciden_con_camino` en tests/test_fantasma_ia.py | Aprobado al integrar 004 |
 
 ## Restricciones verificadas y limitaciones
 
@@ -92,5 +92,5 @@ también con python -S (biblioteca estándar sin paquetes del entorno).
 - Guía quickstart recorrida para preparación y pruebas de 001. Sus comandos futuros de
   main.py siguen señalados como no disponibles hasta la funcionalidad 008.
 - Hooks de implementación: no existe .specify/extensions.yml.
-- CA-27 literal y el checklist de revisión pendiente impiden presentar la aceptación global
+- El checklist de revisión pendiente impide presentar la aceptación global
   como completa; la implementación y validación aislada de esta entrega están acreditadas.

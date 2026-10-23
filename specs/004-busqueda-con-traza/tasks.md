@@ -21,12 +21,12 @@ Cada prueba se ejecuta primero y debe fallar. Después se escribe el código mí
 
 ## Fase 2: Implementación
 
-- [ ] T012 Crear `fantasma_ia.py` con `Evento`, `buscar_camino_con_traza` y `buscar_camino` según el plan.
-- [ ] T013 Ejecutar todas las pruebas y comprobar que pasan.
-- [ ] T014 Medir cobertura con `pytest --cov=fantasma_ia --cov-report=term-missing --cov-fail-under=80`.
-- [ ] T015 Medir el tiempo de una búsqueda 15×15 y registrarlo frente a los 10 ms de RNF-4.
+- [X] T012 Crear `fantasma_ia.py` con `Evento`, `buscar_camino_con_traza` y `buscar_camino` según el plan.
+- [X] T013 Ejecutar todas las pruebas y comprobar que pasan.
+- [X] T014 Medir cobertura con `pytest --cov=fantasma_ia --cov-report=term-missing --cov-fail-under=80`.
+- [X] T015 Medir el tiempo de una búsqueda 15×15 y registrarlo frente a los 10 ms de RNF-4.
 
 ## Fase 3: Cierre
 
-- [ ] T016 Completar `validacion.md` con comandos, resultados y relación con cada CA.
-- [ ] T017 Actualizar el estado de `spec.md` de 004 y la nota de CA-27 en 001.
+- [X] T016 Completar `validacion.md` con comandos, resultados y relación con cada CA.
+- [X] T017 Actualizar el estado de `spec.md` de 004 y la nota de CA-27 en 001.
