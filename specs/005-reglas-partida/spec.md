@@ -2,7 +2,7 @@
 
 **Identificador**: 005-reglas-partida
 **Creada**: 2026-10-17
-**Estado**: Descompuesta para revisión; no implementada.
+**Estado**: Lógica implementada; tiempos y teclas pendientes de 008. Ver [validacion.md](validacion.md).
 **Fuente**: [SPEC-LAB-001 v1.3](../../base/SPEC.md), idéntica al adjunto analizado.
 **Gobierno**: [Constitución 1.0.0](../../.specify/memory/constitution.md).
 

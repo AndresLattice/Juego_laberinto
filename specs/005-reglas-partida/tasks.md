@@ -36,6 +36,6 @@ Los estados `INICIO`, `DADO_*` y `APARECE_FANTASMA` de §11 son de la interfaz y
 
 ## Fase 2: Implementación
 
-- [ ] T009 Crear `juego.py` con la clase `Partida`.
-- [ ] T010 Ejecutar todas las pruebas y medir cobertura de `juego`.
-- [ ] T011 Completar `validacion.md` y actualizar el estado de `spec.md`.
+- [X] T009 Crear `juego.py` con la clase `Partida`.
+- [X] T010 Ejecutar todas las pruebas y medir cobertura de `juego`.
+- [X] T011 Completar `validacion.md` y actualizar el estado de `spec.md`.
