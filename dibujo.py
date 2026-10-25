@@ -15,8 +15,14 @@ def centro(casilla):
     return x + TAM_CELDA // 2, y + TAM_CELDA // 2
 
 
+fuentes = {}
+
+
 def texto(pantalla, mensaje, x, y, tamano=22, color=NEGRO, centrado=False):
-    fuente = pygame.font.Font(None, tamano)
+    # Crear una fuente es lento, así que se guarda la de cada tamaño.
+    if tamano not in fuentes:
+        fuentes[tamano] = pygame.font.Font(None, tamano)
+    fuente = fuentes[tamano]
     imagen = fuente.render(mensaje, True, color)
     if centrado:
         x = x - imagen.get_width() // 2
@@ -141,7 +147,11 @@ def dibujar_panel(pantalla, reproductor, tiempo_fin):
         dibujar_bloque(pantalla, bloque_x, fondo, "... +" + str(sobran) + " más", BLANCO, GRIS, 1)
 
     parpadeo = reproductor.terminado and tiempo_fin < 0.8 and int(tiempo_fin / 0.2) % 2 == 1
-    progreso = min(1, reproductor.tiempo / ANIMACION_BLOQUE)
+    # La animación no puede durar más que el tiempo entre eventos.
+    duracion = min(ANIMACION_BLOQUE, reproductor.intervalo)
+    progreso = min(1, reproductor.tiempo / duracion)
+    if reproductor.pausado:
+        progreso = 1
     evento = reproductor.evento_actual
     for i in range(len(visibles)):
         posicion = i

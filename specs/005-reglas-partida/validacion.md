@@ -34,7 +34,7 @@ Las 250 pruebas anteriores siguen pasando.
 | Fin por pasos | `test_pasos_en_cero_terminan_el_turno` | Aprobado |
 | CA-24 / RF-08 | `test_reiniciar` | Aprobado |
 | RF-04 | `test_acciones_fuera_de_estado` | Aprobado |
-| RF-03 mensaje 1 s, RF-05 0,25 s, RF-09 | Tiempos y teclas de la interfaz | Pendiente de 008 |
+| RF-03 mensaje 1 s, RF-05 0,25 s, RF-09 | `main.py`, comprobado en partidas simuladas (ver 008) | Aprobado |
 
 ## Fase de éxito y cobertura
 

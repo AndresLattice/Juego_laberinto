@@ -37,4 +37,4 @@ Resultado: 277 pruebas pasan. Cobertura de `visualizador.py`: 100 %.
 | Duración A | `test_intervalo_de_la_spec` | Aprobado |
 | Caso límite origen = destino | `test_traza_de_origen_igual_destino` | Aprobado |
 | Pila de 225 | La traza serpiente de 004 cubre la pila; el reproductor solo copia `evento.pila` | Aprobado por diseño |
-| Teclas P, N, S, + y - | Las conecta `main.py` | Pendiente de 008 |
+| Teclas P, N, S, + y - | Las conecta `main.py` durante la búsqueda | Aprobado |

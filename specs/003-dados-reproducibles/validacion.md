@@ -33,6 +33,6 @@ Resultado: 250 pruebas pasan. Cobertura de `dado.py`: 100 %.
 | RF-04 | `test_animacion_no_consume_azar_logico` | Aprobado |
 | RF-05 | `test_misma_semilla_misma_secuencia` | Aprobado |
 | Escenario 2 | `test_cuadros_distintos_misma_partida` | Aprobado |
-| CA-16 integrado | Requiere 005 y 008 | Pendiente de integración |
+| CA-16 integrado | Partida simulada con `--semilla` 42 a 60 y a 30 FPS: mismos dados y misma aparición (ver 008) | Aprobado |
 
 RF-01 pide igual probabilidad. Se usa `randint(1, 6)` como fija D-1; la prueba solo comprueba rango y caras.

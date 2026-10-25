@@ -56,18 +56,13 @@ esperar a 005. No es una instrucción para iniciar varias fases automáticamente
 | §17: declaración de ausencia de dudas | Revisada: las contradicciones reales se enumeran abajo |
 | §18: HTML de referencia | 008; la especificación prevalece sobre el prototipo |
 
-## Decisiones necesarias antes de planificar el aspecto afectado
+## Decisiones tomadas
 
-1. **Duración de la reproducción (006):** la fórmula `max(0.03, 4/eventos)` no permite
-   un máximo de cuatro segundos con cientos de eventos. Con 449 eventos dura 13,47 s.
-   Elegir entre mantener el mínimo de 30 ms, el límite total o agrupar eventos. Ninguna
-   alternativa se ha aprobado ni implementado en esta descomposición.
-2. **ESC tras victoria/derrota (008):** §6.5 indica salir; §10.4 y §11 indican volver al
-   menú. Es necesario confirmar qué regla prevalece. Durante partida y desde inicio no
-   existe contradicción: volver al menú y salir, respectivamente.
-3. **Un solo predefinido válido (002):** ignorar entradas inválidas puede dejar una única
-   opción, incompatible con no repetir inmediatamente. Confirmar si se permite repetir
-   o si se pasa al modo generado. Con cero válidos el respaldo ya está especificado.
+1. **Duración de la reproducción (006):** se mantiene `max(0.03, 4/eventos)` por evento,
+   sin límite total. Las trazas largas duran más de 4 s y la tecla S las salta.
+2. **ESC tras victoria/derrota (008):** vuelve al menú, como indican §10.4 y §11.
+3. **Un solo predefinido válido (002):** no aplica por ahora. El juego usa solo el
+   laberinto 1 del catálogo y no implementa 002.
 
 ## Aclaraciones aplicadas sin ampliar el producto
 
